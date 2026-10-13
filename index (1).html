@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QuickConnect — Get matched with a lender</title>
+<style>
+  :root {
+    --bg: #0F1626;
+    --bg-soft: #161F35;
+    --card: #1B2540;
+    --text: #EAF0FF;
+    --text-dim: #9AA9C7;
+    --accent: #35E0A1;
+    --accent-2: #6C8CFF;
+    --border: #2A3555;
+    font-family: 'Sora', -apple-system, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap');
+  * { box-sizing: border-box; margin:0; padding:0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100%;
+  }
+  html, body { height: 100%; }
+  a { color: inherit; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  header { padding: 22px 0; border-bottom: 1px solid var(--border); }
+  header .wrap { display:flex; align-items:center; justify-content:space-between; }
+  .brand { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; }
+  .brand span { color: var(--accent); }
+
+  .hero {
+    padding: 72px 0 56px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 780px) { .hero { grid-template-columns: 1fr; padding: 48px 0 32px; } }
+
+  .eyebrow { color: var(--accent-2); font-size: 0.9rem; font-weight: 600; margin-bottom: 14px; }
+  h1 {
+    font-size: clamp(2.1rem, 4.8vw, 3.2rem);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    max-width: 12ch;
+  }
+  .hero p.lede {
+    margin-top: 20px;
+    color: var(--text-dim);
+    font-size: 1.08rem;
+    line-height: 1.6;
+    max-width: 46ch;
+  }
+  .trust-line {
+    margin-top: 28px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.92rem;
+    color: var(--text-dim);
+  }
+  .dot { width:7px; height:7px; border-radius:50%; background: var(--accent); flex-shrink:0; }
+
+  .hero-visual {
+    background: linear-gradient(160deg, var(--card), var(--bg-soft));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  .partner-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .partner-card:last-child { margin-bottom: 0; }
+  .partner-badge {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    display:flex; align-items:center; justify-content:center;
+    font-weight: 800; font-size: 1rem; color: #0F1626;
+    flex-shrink: 0;
+  }
+  .partner-info .name { font-weight: 700; font-size: 0.98rem; }
+  .partner-info .meta { color: var(--text-dim); font-size: 0.82rem; margin-top: 2px; font-family: 'IBM Plex Mono', monospace; }
+
+  section.form-section { padding: 40px 0 72px; }
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+  }
+  @media (max-width: 780px) { .panel { grid-template-columns: 1fr; padding: 28px; } }
+
+  .panel h2 { font-size: 1.5rem; font-weight: 800; letter-spacing:-0.01em; margin-bottom: 12px; }
+  .panel .sub { color: var(--text-dim); font-size: 0.96rem; line-height: 1.55; margin-bottom: 22px; }
+
+  .steps { display:flex; flex-direction:column; gap: 16px; }
+  .step { display:flex; gap: 14px; }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 0.78rem; font-weight: 700; color: var(--accent);
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .step .t { font-weight: 700; font-size: 0.95rem; }
+  .step .d { color: var(--text-dim); font-size: 0.86rem; margin-top: 2px; line-height: 1.4; }
+
+  .fee-note {
+    margin-top: 24px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(53, 224, 161, 0.08);
+    border: 1px solid rgba(53, 224, 161, 0.25);
+    font-size: 0.86rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  form { display: flex; flex-direction: column; gap: 16px; }
+  label { font-size: 0.84rem; font-weight: 600; color: var(--text-dim); }
+  .field { display:flex; flex-direction:column; gap: 7px; }
+  input, select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 14px;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: inherit;
+  }
+  input:focus, select:focus, button:focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 1px;
+  }
+  input::placeholder { color: #5C6C8F; }
+
+  button.submit {
+    margin-top: 6px;
+    background: var(--accent);
+    color: #0B1220;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    font-weight: 700;
+    font-size: 0.98rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button.submit:hover { filter: brightness(1.05); }
+  .fine-print { font-size: 0.78rem; color: var(--text-dim); text-align: center; line-height: 1.5; }
+
+  .status-msg {
+    display:none;
+    margin-top: 4px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0 40px;
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    text-align: center;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">Quick<span>Connect</span></div>
+    <div style="font-size:0.85rem;color:var(--text-dim);">Loan referral service</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap" style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center;">
+    <div>
+      <div class="eyebrow">For applicants with limited credit history</div>
+      <h1>Get matched with a lender who'll actually consider you</h1>
+      <p class="lede">A low CIBIL score shouldn't shut every door. Share your details once, and we connect you directly with our lending partner — no cost to you, ever.</p>
+      <div class="trust-line"><span class="dot"></span> Free for applicants. We're paid by the lender, only when a loan is disbursed.</div>
+    </div>
+    <div class="hero-visual">
+      <div class="partner-card">
+        <div class="partner-badge">NB</div>
+        <div class="partner-info">
+          <div class="name">Lending Partner</div>
+          <div class="meta">RBI-registered NBFC</div>
+        </div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-badge">₹0</div>
+        <div class="partner-info">
+          <div class="name">Applicant fee</div>
+          <div class="meta">Always zero</div>
+        </div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-badge">24h</div>
+        <div class="partner-info">
+          <div class="name">Typical response time</div>
+          <div class="meta">After you submit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="form-section">
+  <div class="wrap">
+    <div class="panel">
+      <div>
+        <h2>How this works</h2>
+        <p class="sub">We're a referral service, not a lender. Your details go straight to our NBFC partner, who makes the actual lending decision.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <div class="t">Fill in your details</div>
+              <div class="d">Name, phone number, and the amount you're looking for.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <div class="t">We pass it to our lending partner</div>
+              <div class="d">A registered NBFC reviews your application directly.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <div class="t">They contact you with terms</div>
+              <div class="d">Interest rate, repayment schedule — all disclosed upfront, before you agree to anything.</div>
+            </div>
+          </div>
+        </div>
+        <div class="fee-note">You never pay us. We're paid a referral fee by the lender only if your loan goes through.</div>
+      </div>
+
+      <div>
+        <form id="leadForm">
+          <div class="field">
+            <label for="name">Full name</label>
+            <input id="name" type="text" placeholder="Your name" required>
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input id="phone" type="tel" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+          </div>
+          <div class="field">
+            <label for="amount">Loan amount needed</label>
+            <select id="amount" required>
+              <option value="" disabled selected>Select a range</option>
+              <option>₹5,000 – ₹20,000</option>
+              <option>₹20,000 – ₹50,000</option>
+              <option>₹50,000 – ₹1,00,000</option>
+              <option>₹1,00,000+</option>
+            </select>
+          </div>
+          <button type="submit" class="submit">Send my details — free</button>
+          <div class="status-msg" id="statusMsg">Thanks — we'll pass this to our lending partner shortly.</div>
+          <div class="fine-print">By submitting, you agree to be contacted by our lending partner. We charge applicants nothing at any stage.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    QuickConnect is a loan referral service and is not itself a lender.<br>
+    All lending decisions, interest rates, and disbursals are made solely by our registered NBFC partner.
+  </div>
+</footer>
+
+<script>
+  document.getElementById('leadForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('statusMsg').style.display = 'block';
+    this.querySelector('button').textContent = 'Sent';
+    this.querySelector('button').disabled = true;
+  });
+</script>
+
+</body>
+</html>
